@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "720475041250",
+    "firebase_url": "https://logmein-10279.firebaseio.com",
+    "project_id": "logmein-10279",
+    "storage_bucket": "logmein-10279.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720475041250:android:95f7c2e2d3348ce7",
+        "android_client_info": {
+          "package_name": "com.example.mebinjohnson.logmein"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "720475041250-2gagic3lq1nkuq49qk9815qepkg7bsc4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mebinjohnson.logmein",
+            "certificate_hash": "61ac872eeb35b77692562a9d9039f7bf3e4f50f0"
+          }
+        },
+        {
+          "client_id": "720475041250-r9lpiuu3n173775bstab9ervrmomjd87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0PZKUvGJD7BovoEVVPSu3qzw_tWGYrtM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "720475041250-r9lpiuu3n173775bstab9ervrmomjd87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
