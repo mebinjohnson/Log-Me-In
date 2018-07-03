@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordField;
     private TextView mCreateAccount;
     private Button mLogInButton;
+    RelativeLayout mRoot;
 
 
     @Override
@@ -70,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         mLogInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar = new ProgressBar(LoginActivity.this, null, android.R.attr.progressBarStyleLarge);
+
 
                 String email = mEmailField.getText().toString().trim();
                 String password = mPasswordField.getText().toString().trim();
@@ -97,6 +99,8 @@ public class LoginActivity extends AppCompatActivity {
         mCreateAccount = findViewById(R.id.tvCreateAccount);
         mLogInButton = findViewById(R.id.log_in_button);
 
+        mRoot = findViewById(R.id.log_in_root);
+
     }
 
     private void signIn(String email, String password) {
@@ -106,6 +110,12 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         //TODO: showProgressDialog();
+
+        progressBar = new ProgressBar(LoginActivity.this, null, android.R.attr.progressBarStyleLarge);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100,100);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        mRoot.addView(progressBar,params);
+        progressBar.setVisibility(View.VISIBLE);
 
         // [START sign_in_with_email]
         mAuth.signInWithEmailAndPassword(email, password)
@@ -117,6 +127,8 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             //TODO: updateUI(user);
 
                         } else {
@@ -131,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             //mStatusTextView.setText(R.string.auth_failed);
                         }
+                        progressBar.setVisibility(View.GONE);
                         //hideProgressDialog();
                         // [END_EXCLUDE]
                     }
