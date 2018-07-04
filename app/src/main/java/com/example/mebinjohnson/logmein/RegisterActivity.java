@@ -49,12 +49,11 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
-                                Toast.makeText(RegisterActivity.this, "Account Created!", Toast.LENGTH_SHORT).show();
-
 //                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 //                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 //                                        .setDisplayName("Jane Q. User")
 //                                        .build();
+                                Toast.makeText(RegisterActivity.this, "Account Created!", Toast.LENGTH_SHORT).show();
 
                                 startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
                             }

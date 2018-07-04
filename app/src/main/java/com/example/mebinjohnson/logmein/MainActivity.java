@@ -1,5 +1,6 @@
 package com.example.mebinjohnson.logmein;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,8 +10,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity {
 
+    FirebaseAuth mAuth;
+    FirebaseUser mUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,12 +24,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mAuth = FirebaseAuth.getInstance();
+
+        mUser = mAuth.getCurrentUser();
+//
+//        mUser.getDisplayName();
+//
+//        getActionBar().setTitle("Hey "+mUser.getDisplayName());
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_log_out);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Logging Out", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                mAuth.signOut();
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
             }
         });
     }
