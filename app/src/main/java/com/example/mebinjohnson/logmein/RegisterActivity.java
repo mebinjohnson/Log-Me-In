@@ -17,6 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -39,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         mRegButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (validateForm()){
+                if (validateForm()) {
                     //Uploading Data to Firebase
 
                     String email = mUserMail.getText().toString().trim();
@@ -48,16 +50,15 @@ public class RegisterActivity extends AppCompatActivity {
                     mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
 //                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 //                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
 //                                        .setDisplayName("Jane Q. User")
 //                                        .build();
                                 Toast.makeText(RegisterActivity.this, "Account Created!", Toast.LENGTH_SHORT).show();
+                                SendVerificationMail();
 
-                                startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
-                            }
-                            else{
+                            } else {
                                 Toast.makeText(RegisterActivity.this, "Account Creation Failed!", Toast.LENGTH_SHORT).show();
                             }
 
@@ -70,9 +71,32 @@ public class RegisterActivity extends AppCompatActivity {
         mSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+                finish();
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
+    }
+
+    private void SendVerificationMail() {
+        final FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+
+                        Toast.makeText(RegisterActivity.this, "Verification Email is sent to your Mail", Toast.LENGTH_LONG).show();
+                        updateUserData();
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+
+                    }
+                    else{
+                        Toast.makeText(RegisterActivity.this, "Verification Email could not be send", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        }
     }
 
 
@@ -104,7 +128,7 @@ public class RegisterActivity extends AppCompatActivity {
             mUserPassword.setError(null);
         }
         String agestr = mUserAge.getText().toString();
-        int age = Integer.parseInt( mUserAge.getText().toString());
+        int age = Integer.parseInt(mUserAge.getText().toString());
         if (TextUtils.isEmpty(agestr)) {
             mUserAge.setError("Required.");
             valid = false;
@@ -115,5 +139,11 @@ public class RegisterActivity extends AppCompatActivity {
             mUserAge.setError(null);
         }
         return valid;
+    }
+    private void updateUserData(){
+        FirebaseDatabase mdata= FirebaseDatabase.getInstance();
+        DatabaseReference mref= mdata.getReference(mAuth.getUid());
+        UserProfile userProfile= new UserProfile( mUserName.getText().toString(), mUserMail.getText().toString().trim(), mUserAge.getText().toString().trim());
+        mref.setValue(userProfile);
     }
 }

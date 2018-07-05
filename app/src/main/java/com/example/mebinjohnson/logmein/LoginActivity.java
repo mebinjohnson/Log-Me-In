@@ -35,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmailField;
     private EditText mPasswordField;
     private TextView mCreateAccount;
+    private TextView mForgotPassword;
+
     private Button mLogInButton;
     RelativeLayout mRoot;
 
@@ -54,10 +56,9 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-
         FirebaseUser user = mAuth.getCurrentUser();
 
-        if (user!=null){
+        if (user != null) {
             finish();
             startActivity(new Intent(this, MainActivity.class));
         }
@@ -77,7 +78,14 @@ public class LoginActivity extends AppCompatActivity {
                 String email = mEmailField.getText().toString().trim();
                 String password = mPasswordField.getText().toString().trim();
 
-                signIn(email,password);
+                signIn(email, password);
+            }
+        });
+
+        mForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this,ResetPassword.class));
             }
         });
     }
@@ -87,7 +95,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser!=null){
+        if (currentUser != null) {
+            finish();
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
         }
     }
@@ -99,6 +108,8 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordField = findViewById(R.id.field_password);
 
         mCreateAccount = findViewById(R.id.tvCreateAccount);
+        mForgotPassword = findViewById(R.id.tvForgotPassword);
+
         mLogInButton = findViewById(R.id.log_in_button);
 
         mRoot = findViewById(R.id.log_in_root);
@@ -114,9 +125,9 @@ public class LoginActivity extends AppCompatActivity {
         //TODO: showProgressDialog();
 
         progressBar = new ProgressBar(LoginActivity.this, null, android.R.attr.progressBarStyleLarge);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100,100);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 100);
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mRoot.addView(progressBar,params);
+        mRoot.addView(progressBar, params);
         progressBar.setVisibility(View.VISIBLE);
 
         // [START sign_in_with_email]
@@ -129,8 +140,8 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            checkEmailVerification();
 
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             //TODO: updateUI(user);
 
                         } else {
@@ -152,6 +163,24 @@ public class LoginActivity extends AppCompatActivity {
                 });
         // [END sign_in_with_email]
     }
+
+    public void checkEmailVerification() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        boolean isVerified = user.isEmailVerified();
+
+        if (isVerified) {
+            finish();
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        } else {
+            Toast.makeText(LoginActivity.this, "Please verify you're Email to login",
+                    Toast.LENGTH_SHORT).show();
+            FirebaseAuth.getInstance().signOut();
+        }
+
+
+    }
+
 
     private boolean validateForm() {
         boolean valid = true;

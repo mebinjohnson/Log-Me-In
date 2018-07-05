@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Logging Out", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 mAuth.signOut();
+                finish();
                 startActivity(new Intent(MainActivity.this,LoginActivity.class));
             }
         });
